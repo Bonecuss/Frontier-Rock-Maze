@@ -34,7 +34,7 @@ func main() {
 		{9, 9, 9, 9, 9, 9, 9, 9, 9, 9},
 		{9, 1, 1, 1, 1, 9, 9, 9, 9, 9},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 9},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 9},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -64,9 +64,33 @@ func main() {
 	maze[endposy][endposx] = 2
 	maze[startposy][startposx] = 3
 
+	//Lazy solution to the rare unsolvable maze.
+	if maze[endposy-1][endposx] == 1 && maze[endposy+1][endposx] == 1 {
+		if endposx == 0 {
+			if maze[endposy][endposx+1] == 1 {
+				maze[endposy-1][endposx] = 0
+			}
+		} else {
+			if maze[endposy][endposx-1] == 1 {
+				maze[endposy+1][endposx] = 0
+			}
+		}
+	}
+	if maze[startposy-1][startposx] == 1 && maze[startposy+1][startposx] == 1 {
+		if startposx == 0 {
+			if maze[startposy][startposx+1] == 1 {
+				maze[startposy-1][startposx] = 0
+			}
+		} else {
+			if maze[startposy][startposx-1] == 1 {
+				maze[startposy+1][startposx] = 0
+			}
+		}
+	}
+
 	//Target Transition
 	//X
-	data = writeFloat(data, xoffset-float32(xscale*startposx), 1540)
+	data = writeFloat(data, xoffset-float32((xscale-70)*startposx), 1540)
 	//Z
 	data = writeFloat(data, zoffset-float32(yscale*startposy), 1548)
 
