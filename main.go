@@ -53,7 +53,7 @@ func main() {
 	var endposx int = 9
 	var endposy int = 6
 
-	maze = carveMaze(4+rand.Intn(3)-rand.Intn(3), 4+rand.Intn(3)-rand.Intn(3), maze)
+	maze = carveMaze(4+rand.Intn(3)-rand.Intn(3), 4+rand.Intn(3)-rand.Intn(3), maze, 0)
 
 	if rand.Intn(2) == 1 { //Start on left or right
 		startposx = 9
@@ -162,13 +162,18 @@ func main() {
 		fmt.Println()
 	}
 
+	//Writes finished file
 	err = ioutil.WriteFile("quest_override.bin", data, 0644)
 
 	fmt.Println("data written")
 }
 
-func carveMaze(x int, y int, maze [10][10]int) [10][10]int {
+func carveMaze(x int, y int, maze [10][10]int, depth int) [10][10]int {
 	//This is kind of a mess but works. I dunno.
+	depth++
+	if depth == 30 { //Just in case.
+		return maze
+	}
 	maze[x][y] = 0
 	var carved bool = false
 	switch rand.Intn(4) {
@@ -177,7 +182,7 @@ func carveMaze(x int, y int, maze [10][10]int) [10][10]int {
 			if maze[x-2][y] == 1 {
 				maze[x-2][y] = 0
 				maze[x-1][y] = 0
-				maze = carveMaze(x-2, y, maze)
+				maze = carveMaze(x-2, y, maze, depth)
 				carved = true
 			}
 		} /*else {
@@ -195,7 +200,7 @@ func carveMaze(x int, y int, maze [10][10]int) [10][10]int {
 			if maze[x+2][y] == 1 {
 				maze[x+2][y] = 0
 				maze[x+1][y] = 0
-				maze = carveMaze(x+2, y, maze)
+				maze = carveMaze(x+2, y, maze, depth)
 				carved = true
 			}
 		} /*else {
@@ -213,7 +218,7 @@ func carveMaze(x int, y int, maze [10][10]int) [10][10]int {
 			if maze[x][y-2] == 1 {
 				maze[x][y-2] = 0
 				maze[x][y-1] = 0
-				maze = carveMaze(x, y-2, maze)
+				maze = carveMaze(x, y-2, maze, depth)
 				carved = true
 			}
 		} /*else {
@@ -231,7 +236,7 @@ func carveMaze(x int, y int, maze [10][10]int) [10][10]int {
 			if maze[x][y+2] == 1 {
 				maze[x][y+2] = 0
 				maze[x][y+1] = 0
-				maze = carveMaze(x, y+2, maze)
+				maze = carveMaze(x, y+2, maze, depth)
 				carved = true
 			} /*else {
 				if y == 7 {
@@ -249,28 +254,28 @@ func carveMaze(x int, y int, maze [10][10]int) [10][10]int {
 		if maze[x-2][y] == 1 {
 			maze[x-2][y] = 0
 			maze[x-1][y] = 0
-			maze = carveMaze(x-2, y, maze)
+			maze = carveMaze(x-2, y, maze, depth)
 		}
 	}
 	if x <= 7 {
 		if maze[x+2][y] == 1 {
 			maze[x+2][y] = 0
 			maze[x+1][y] = 0
-			maze = carveMaze(x+2, y, maze)
+			maze = carveMaze(x+2, y, maze, depth)
 		}
 	}
 	if y >= 2 {
 		if maze[x][y-2] == 1 {
 			maze[x][y-2] = 0
 			maze[x][y-1] = 0
-			maze = carveMaze(x, y-2, maze)
+			maze = carveMaze(x, y-2, maze, depth)
 		}
 	}
 	if y <= 7 {
 		if maze[x][y+2] == 1 {
 			maze[x][y+2] = 0
 			maze[x][y+1] = 0
-			maze = carveMaze(x, y+2, maze)
+			maze = carveMaze(x, y+2, maze, depth)
 		}
 	}
 	return maze
